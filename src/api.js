@@ -1,4 +1,14 @@
 /**
  * 适配小程序API宿主对象
  */
-export default (wx || window.wx || window.tt || window.my || window.swan)
+let api
+if (typeof wx !== 'undefined') {
+  api = wx
+} else if (typeof tt !== 'undefined') {
+  api = tt
+} else if (typeof my !== 'undefined') {
+  api = my
+} else if (typeof swan !== 'undefined') {
+  api = swan
+}
+export default api

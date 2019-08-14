@@ -1726,7 +1726,17 @@ var Cookie = function () {
 /**
  * 适配小程序API宿主对象
  */
-var api = wx || window.wx || window.tt || window.my || window.swan;
+var api = void 0;
+if (typeof wx !== 'undefined') {
+  api = wx;
+} else if (typeof tt !== 'undefined') {
+  api = tt;
+} else if (typeof my !== 'undefined') {
+  api = my;
+} else if (typeof swan !== 'undefined') {
+  api = swan;
+}
+var api$1 = api;
 
 /**
  * CookieStore 类
@@ -2259,7 +2269,7 @@ var CookieStore = function () {
           }
         }
 
-        api.setStorageSync(this.__storageKey, saveCookies);
+        api$1.setStorageSync(this.__storageKey, saveCookies);
       } catch (err) {
         console.warn('Cookie 存储异常：', err);
       }
@@ -2274,7 +2284,7 @@ var CookieStore = function () {
     value: function __readFromStorage() {
       try {
         // 从本地存储读取 cookie 数据数组
-        var cookies = api.getStorageSync(this.__storageKey) || [];
+        var cookies = api$1.getStorageSync(this.__storageKey) || [];
 
         // 转化为 Cookie 对象数组
         cookies = cookies.map(function (item) {
@@ -2340,13 +2350,13 @@ var cookieStore = function () {
   }
 
   // 绑定新的
-  var requestProxy = cookieRequestProxy.bind(api.request);
-  var uploadFileProxy = cookieRequestProxy.bind(api.uploadFile);
-  var downloadFileProxy = cookieRequestProxy.bind(api.downloadFile);
+  var requestProxy = cookieRequestProxy.bind(api$1.request);
+  var uploadFileProxy = cookieRequestProxy.bind(api$1.uploadFile);
+  var downloadFileProxy = cookieRequestProxy.bind(api$1.downloadFile);
 
   try {
     // 使用 requestProxy 覆盖微信原生 request、uploadFile
-    _Object$defineProperties(api, {
+    _Object$defineProperties(api$1, {
       // request
       request: {
         value: requestProxy
@@ -2382,13 +2392,13 @@ var cookieStore = function () {
     }, options);
     // 配置请求别名
     if (options.requestAlias) {
-      _Object$defineProperty(api, options.requestAlias, { value: requestProxy });
+      _Object$defineProperty(api$1, options.requestAlias, { value: requestProxy });
     }
     if (options.uploadFileAlias) {
-      _Object$defineProperty(api, options.uploadFileAlias, { value: uploadFileProxy });
+      _Object$defineProperty(api$1, options.uploadFileAlias, { value: uploadFileProxy });
     }
     if (options.downloadFileAlias) {
-      _Object$defineProperty(api, options.downloadFileAlias, { value: downloadFileProxy });
+      _Object$defineProperty(api$1, options.downloadFileAlias, { value: downloadFileProxy });
     }
   };
 
