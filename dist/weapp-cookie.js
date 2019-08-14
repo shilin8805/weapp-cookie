@@ -2330,7 +2330,8 @@ var CookieStore = function () {
             key: this.__storageKey
           });
         } else {
-          cookies = api$1.getStorageSync(this.__storageKey);
+          var res = api$1.getStorageSync(this.__storageKey);
+          cookies = res.data;
         }
 
         cookies = cookies || [];
