@@ -331,7 +331,8 @@ class CookieStore {
           key: this.__storageKey
         })
       } else {
-        cookies = api.getStorageSync(this.__storageKey)
+        let res = api.getStorageSync(this.__storageKey)
+        cookies = res.data
       }
 
       cookies = cookies || []
