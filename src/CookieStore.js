@@ -327,12 +327,12 @@ class CookieStore {
       let cookies = null
 
       if (util.isAlipay()) {
-        cookies = api.getStorageSync({
+        let res = api.getStorageSync({
           key: this.__storageKey
         })
-      } else {
-        let res = api.getStorageSync(this.__storageKey)
         cookies = res.data
+      } else {
+        cookies = api.getStorageSync(this.__storageKey)
       }
 
       cookies = cookies || []

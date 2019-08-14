@@ -2326,12 +2326,12 @@ var CookieStore = function () {
         var cookies = null;
 
         if (util.isAlipay()) {
-          cookies = api$1.getStorageSync({
+          var res = api$1.getStorageSync({
             key: this.__storageKey
           });
-        } else {
-          var res = api$1.getStorageSync(this.__storageKey);
           cookies = res.data;
+        } else {
+          cookies = api$1.getStorageSync(this.__storageKey);
         }
 
         cookies = cookies || [];
