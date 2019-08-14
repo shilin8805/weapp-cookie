@@ -25,6 +25,26 @@ class Util {
   normalizeDomain (domain = '') {
     return domain.replace(/^(\.*)?(?=\S)/ig, '.')
   }
+
+  // 微信小程序
+  isWechat () {
+    return typeof wx !== 'undefined' && typeof wx.showToast === 'function'
+  }
+
+  // 支付宝小程序
+  isAlipay () {
+    return typeof my !== 'undefined' && typeof my.showToast === 'function'
+  }
+
+  // 百度智能小程序
+  isSwan () {
+    return typeof swan !== 'undefined' && typeof swan.showToast === 'function'
+  }
+
+  // 字节跳动小程序
+  isTt () {
+    return typeof tt !== 'undefined' && typeof tt.showToast === 'function'
+  }
 }
 
 export default new Util()

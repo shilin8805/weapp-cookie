@@ -82,7 +82,7 @@ class CookieStore {
    * @return {Object}  obj  结构JSON对象
    */
   dir () {
-    let dirObj = { }
+    let dirObj = {}
 
     for (let domain of this.__cookiesMap.keys()) {
       dirObj[domain] = this.getCookies(domain)
@@ -150,7 +150,7 @@ class CookieStore {
    * @return {Object}           cookie 值列表对象
    */
   getCookies (domain, path) {
-    let cookieValues = { }
+    let cookieValues = {}
 
     // 将 cookie 值添加到对象
     this.getCookiesArray(domain, path).forEach((cookie) => {
@@ -305,7 +305,14 @@ class CookieStore {
       }
 
       // 保存到本地存储
-      api.setStorageSync(this.__storageKey, saveCookies)
+      if (util.isAlipay()) {
+        api.setStorageSync({
+          key: this.__storageKey,
+          data: saveCookies
+        })
+      } else {
+        api.setStorageSync(this.__storageKey, saveCookies)
+      }
     } catch (err) {
       console.warn('Cookie 存储异常：', err)
     }
@@ -317,7 +324,17 @@ class CookieStore {
   __readFromStorage () {
     try {
       // 从本地存储读取 cookie 数据数组
-      let cookies = api.getStorageSync(this.__storageKey) || []
+      let cookies = null
+
+      if (util.isAlipay()) {
+        cookies = api.getStorageSync({
+          key: this.__storageKey
+        })
+      } else {
+        cookies = api.getStorageSync(this.__storageKey)
+      }
+
+      cookies = cookies || []
 
       // 转化为 Cookie 对象数组
       cookies = cookies.map((item) => new Cookie(item))

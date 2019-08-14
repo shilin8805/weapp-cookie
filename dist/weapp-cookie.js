@@ -1587,6 +1587,38 @@ var Util = function () {
 
       return domain.replace(/^(\.*)?(?=\S)/ig, '.');
     }
+
+    // 微信小程序
+
+  }, {
+    key: 'isWechat',
+    value: function isWechat() {
+      return typeof wx !== 'undefined' && typeof wx.showToast === 'function';
+    }
+
+    // 支付宝小程序
+
+  }, {
+    key: 'isAlipay',
+    value: function isAlipay() {
+      return typeof my !== 'undefined' && typeof my.showToast === 'function';
+    }
+
+    // 百度智能小程序
+
+  }, {
+    key: 'isSwan',
+    value: function isSwan() {
+      return typeof swan !== 'undefined' && typeof swan.showToast === 'function';
+    }
+
+    // 字节跳动小程序
+
+  }, {
+    key: 'isTt',
+    value: function isTt() {
+      return typeof tt !== 'undefined' && typeof tt.showToast === 'function';
+    }
   }]);
 
   return Util;
@@ -2269,7 +2301,14 @@ var CookieStore = function () {
           }
         }
 
-        api$1.setStorageSync(this.__storageKey, saveCookies);
+        if (util.isAlipay()) {
+          api$1.setStorageSync({
+            key: this.__storageKey,
+            data: saveCookies
+          });
+        } else {
+          api$1.setStorageSync(this.__storageKey, saveCookies);
+        }
       } catch (err) {
         console.warn('Cookie 存储异常：', err);
       }
@@ -2284,7 +2323,17 @@ var CookieStore = function () {
     value: function __readFromStorage() {
       try {
         // 从本地存储读取 cookie 数据数组
-        var cookies = api$1.getStorageSync(this.__storageKey) || [];
+        var cookies = null;
+
+        if (util.isAlipay()) {
+          cookies = api$1.getStorageSync({
+            key: this.__storageKey
+          });
+        } else {
+          cookies = api$1.getStorageSync(this.__storageKey);
+        }
+
+        cookies = cookies || [];
 
         // 转化为 Cookie 对象数组
         cookies = cookies.map(function (item) {
