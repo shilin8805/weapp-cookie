@@ -1,5 +1,6 @@
 import CookieStore from './CookieStore'
 import api from './api'
+import util from './util'
 
 /**
  * 微信 Cookie 代理
@@ -24,19 +25,34 @@ const cookieStore = (function () {
       // 获取请求 cookies
       let requestCookies = cookieStore.getRequestCookies(domain, path)
 
-      // 请求时带上设置的 cookies
-      options.header = options.header || {}
-      options.header['Cookie'] = requestCookies
-      options.header['X-Requested-With'] = 'XMLHttpRequest'
-      if (options.dataType === 'json') {
-        options.header['Accept'] = 'application/json, text/plain, */*'
+      if (util.isAlipay()) {
+        // 请求时带上设置的 cookies
+        options.headers = options.headers || {}
+        options.headers['Cookie'] = requestCookies
+        options.headers['X-Requested-With'] = 'XMLHttpRequest'
+        if (options.dataType === 'json') {
+          options.headers['Accept'] = 'application/json, text/plain, */*'
+        }
+      } else {
+        // 请求时带上设置的 cookies
+        options.header = options.header || {}
+        options.header['Cookie'] = requestCookies
+        options.header['X-Requested-With'] = 'XMLHttpRequest'
+        if (options.dataType === 'json') {
+          options.header['Accept'] = 'application/json, text/plain, */*'
+        }
       }
 
       // 请求成功回调
       let successCallback = options.success
       options.success = function (response) {
         // 获取响应 cookies
-        let responseCookies = response.header ? response.header['Set-Cookie'] || response.header['set-cookie'] : ''
+        let responseCookies
+        if (util.isAlipay()) {
+          responseCookies = response.headers ? response.headers['Set-Cookie'] || response.headers['set-cookie'] : ''
+        } else {
+          responseCookies = response.header ? response.header['Set-Cookie'] || response.header['set-cookie'] : ''
+        }
         // 设置 cookies，以便下次请求带上
         if (responseCookies) cookieStore.setResponseCookies(responseCookies, domain)
         // 调用成功回调函数
