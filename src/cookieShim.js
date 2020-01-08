@@ -28,7 +28,7 @@ const cookieStore = (function () {
       if (util.isAlipay()) {
         // 请求时带上设置的 cookies
         options.headers = options.headers || {}
-        //支付宝不处理cookie，由系统自己处理
+        // 支付宝不处理cookie，由系统自己处理
         // options.headers['Cookie'] = requestCookies
         options.headers['X-Requested-With'] = 'XMLHttpRequest'
         if (options.dataType === 'json') {
@@ -50,7 +50,7 @@ const cookieStore = (function () {
         // 获取响应 cookies
         let responseCookies
         if (util.isAlipay()) {
-          //支付宝不处理cookie，由系统自己处理
+          // 支付宝不处理cookie，由系统自己处理
           // responseCookies = response.headers ? response.headers['Set-Cookie'] || response.headers['set-cookie'] : ''
         } else {
           responseCookies = response.header ? response.header['Set-Cookie'] || response.header['set-cookie'] : ''

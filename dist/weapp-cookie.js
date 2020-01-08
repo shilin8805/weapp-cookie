@@ -2378,7 +2378,8 @@ var cookieStore = function () {
       if (util.isAlipay()) {
         // 请求时带上设置的 cookies
         options.headers = options.headers || {};
-        options.headers['Cookie'] = requestCookies;
+        // 支付宝不处理cookie，由系统自己处理
+        // options.headers['Cookie'] = requestCookies
         options.headers['X-Requested-With'] = 'XMLHttpRequest';
         if (options.dataType === 'json') {
           options.headers['Accept'] = 'application/json, text/plain, */*';
@@ -2399,7 +2400,8 @@ var cookieStore = function () {
         // 获取响应 cookies
         var responseCookies = void 0;
         if (util.isAlipay()) {
-          responseCookies = response.headers ? response.headers['Set-Cookie'] || response.headers['set-cookie'] : '';
+          // 支付宝不处理cookie，由系统自己处理
+          // responseCookies = response.headers ? response.headers['Set-Cookie'] || response.headers['set-cookie'] : ''
         } else {
           responseCookies = response.header ? response.header['Set-Cookie'] || response.header['set-cookie'] : '';
         }
